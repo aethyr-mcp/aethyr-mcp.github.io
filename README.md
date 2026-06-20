@@ -1,6 +1,6 @@
 # Aethyr MCP — aethyrgames.github.io
 
-Product and documentation site for **Aethyr**, an MCP server that lets AI coding assistants (Claude, Copilot, Cursor, and others) read and author Unreal Engine 5 Blueprints in plain language.
+Product and documentation site for **Aethyr**, an MCP server that lets AI coding assistants (Claude and others) read and author Unreal Engine 5 Blueprints in plain language.
 
 Live at https://aethyr.gg
 
