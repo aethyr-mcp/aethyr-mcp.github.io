@@ -331,14 +331,14 @@ a{color:inherit;text-decoration:none}
   .xtl-glint-violet{animation:xtl-glint 5.5s var(--ease) infinite}
   .xtl-glint-magenta{animation:xtl-glint 5.5s var(--ease) .9s infinite}
   .xtl-glint-ember{animation:xtl-glint 5.5s var(--ease) 1.8s infinite}
-  @keyframes xtl-glint{0%,100%{opacity:.35}50%{opacity:.7}}
+  @keyframes xtl-glint{0%,100%{opacity:.40}50%{opacity:.84}}
 
   .brand-lockup .xtl-shard{animation:xtl-twinkle 7s ease-in-out infinite}
   .brand-lockup .xtl-shard:nth-child(3n){animation-duration:8.5s;animation-delay:1.2s}
   .brand-lockup .xtl-shard:nth-child(3n+1){animation-duration:6s;animation-delay:.6s}
   @keyframes xtl-twinkle{
     0%,100%{opacity:var(--o,.6);transform:translateX(0)}
-    50%{opacity:calc(var(--o,.6)*.6);transform:translateX(1.5px)}}
+    50%{opacity:calc(var(--o,.6)*.75);transform:translateX(1.5px)}}
 }
 
 /* ---- responsive ---- */
@@ -398,7 +398,9 @@ a{color:inherit;text-decoration:none}
 
 /* ---- FAQ section ---- */
 .faq-section{position:relative;z-index:5;max-width:860px;margin:0 auto;
-  padding:0 clamp(20px,7vw,120px) clamp(70px,11vw,140px)}
+  padding:0 clamp(20px,7vw,120px) clamp(70px,11vw,140px);
+  border-top:1px solid var(--line)}
+.faq-section .section-head{padding-left:0;padding-right:0;max-width:none}
 .faq-item{border:1px solid var(--line);border-radius:8px;margin:.75rem 0;overflow:hidden;
   transition:border-color .2s}
 .faq-item[open]{border-color:rgba(28,230,255,.28)}

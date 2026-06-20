@@ -107,34 +107,6 @@
       ).join('');
     }
 
-    const snippetInner = document.getElementById('snippet-inner');
-    if (snippetInner && data.snippet) {
-      const safeCode = data.snippet.code
-        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
-      const snippetKicker = data.snippet.kicker || '// QUICK START';
-      snippetInner.innerHTML =
-        '<div class="section-head reveal-up"><span class="kicker">' + snippetKicker + '</span>'
-        + '<h2>' + data.snippet.heading + '</h2>'
-        + '<p class="snippet-caption">' + data.snippet.caption + '</p></div>'
-        + '<div class="snippet-wrap reveal-up">'
-        + '<pre class="snippet-code"><code>' + safeCode + '</code></pre>'
-        + '<button class="copy-btn" aria-label="Copy config">⌘ Copy</button>'
-        + '</div>';
-      const copyBtn = snippetInner.querySelector('.copy-btn');
-      if (copyBtn) {
-        const codeToCopy = data.snippet.code;
-        copyBtn.addEventListener('click', function() {
-          navigator.clipboard.writeText(codeToCopy).then(() => {
-            this.textContent = '✓ Copied';
-            setTimeout(() => { this.textContent = '⌘ Copy'; }, 2200);
-          }).catch(() => {
-            this.textContent = '✗ Failed';
-            setTimeout(() => { this.textContent = '⌘ Copy'; }, 2200);
-          });
-        });
-      }
-    }
-
     const faqInner = document.getElementById('faq-inner');
     if (faqInner && data.faq) {
       const faqKicker = data.faq.kicker || '// FAQ';
