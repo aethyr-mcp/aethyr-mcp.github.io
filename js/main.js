@@ -47,9 +47,26 @@
       ).join('');
     }
 
+    const trustBadges = document.getElementById('trust-badges');
+    if (trustBadges && data.hero?.badges) {
+      trustBadges.innerHTML = data.hero.badges.map(b =>
+        '<span class="trust-badge">' + b.icon + ' ' + b.label + '</span>'
+      ).join('');
+    }
+
     const marqueeSet = document.getElementById('marquee-set');
     if (marqueeSet && data.marquee) {
       marqueeSet.innerHTML = data.marquee.map(t => '<span>' + t + '</span><i>◇</i>').join('');
+    }
+
+    const clientsInner = document.getElementById('clients-inner');
+    if (clientsInner && data.clients) {
+      clientsInner.innerHTML = '<h3 class="clients-head">' + data.clients.heading + '</h3>'
+        + '<div class="clients-list">'
+        + data.clients.items.map(c =>
+            '<span class="client-chip">' + c.name + (c.note ? ' <small>' + c.note + '</small>' : '') + '</span>'
+          ).join('')
+        + '</div>';
     }
 
     const featuresHead = document.getElementById('features-head');
@@ -87,6 +104,46 @@
       ).join('');
     }
 
+    const snippetInner = document.getElementById('snippet-inner');
+    if (snippetInner && data.snippet) {
+      const safeCode = data.snippet.code
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      snippetInner.innerHTML =
+        '<div class="section-head reveal-up"><span class="kicker">// QUICK START</span>'
+        + '<h2>' + data.snippet.heading + '</h2>'
+        + '<p class="snippet-caption">' + data.snippet.caption + '</p></div>'
+        + '<div class="snippet-wrap reveal-up">'
+        + '<pre class="snippet-code"><code>' + safeCode + '</code></pre>'
+        + '<button class="copy-btn" aria-label="Copy config">⌘ Copy</button>'
+        + '</div>';
+      const copyBtn = snippetInner.querySelector('.copy-btn');
+      if (copyBtn) {
+        const codeToCopy = data.snippet.code;
+        copyBtn.addEventListener('click', function() {
+          navigator.clipboard.writeText(codeToCopy).then(() => {
+            this.textContent = '✓ Copied';
+            setTimeout(() => { this.textContent = '⌘ Copy'; }, 2200);
+          }).catch(() => {
+            this.textContent = '✗ Failed';
+            setTimeout(() => { this.textContent = '⌘ Copy'; }, 2200);
+          });
+        });
+      }
+    }
+
+    const faqInner = document.getElementById('faq-inner');
+    if (faqInner && data.faq) {
+      faqInner.innerHTML =
+        '<div class="section-head reveal-up"><span class="kicker">// FAQ</span>'
+        + '<h2>' + data.faq.heading + '</h2></div>'
+        + data.faq.items.map(item =>
+            '<details class="faq-item">'
+            + '<summary class="faq-q">' + item.q + '</summary>'
+            + '<p class="faq-a">' + item.a + '</p>'
+            + '</details>'
+          ).join('');
+    }
+
     const summonInner = document.getElementById('summon-inner');
     if (summonInner && data.summon) {
       const ctaHTML = data.summon.cta.map(b => {
@@ -105,9 +162,15 @@
 
     const footer = document.getElementById('site-footer');
     if (footer && data.footer) {
+      const footLinksHTML = data.footer.links
+        ? '<nav class="foot-links">'
+          + data.footer.links.map(l => '<a href="' + l.href + '">' + l.label + '</a>').join('')
+          + '</nav>'
+        : '';
       footer.innerHTML =
         '<div class="foot-brand"><img class="foot-mark" src="img/brand/aethyr-crystal.svg" alt="" aria-hidden="true" width="20" height="20"> Aethyr</div>' +
         '<p class="foot-note">' + data.footer.tagline + '</p>' +
+        footLinksHTML +
         '<p class="foot-legal">' + data.footer.legal + '</p>';
     }
   } catch (err) {

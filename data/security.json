@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "title": "Security & Privacy — Aethyr",
+    "description": "How Aethyr protects your Unreal Engine project: no telemetry, read-only by default, automatic backups, compile gate."
+  },
+  "sidebar": {
+    "brand": { "href": "/", "label": "Aethyr" },
+    "backHref": "/",
+    "sections": [
+      {
+        "heading": "Security",
+        "items": [
+          { "href": "#no-telemetry", "label": "No telemetry" },
+          { "href": "#read-only", "label": "Read-only by default" },
+          { "href": "#backup-ring", "label": "Backup ring" },
+          { "href": "#compile-gate", "label": "Compile gate" },
+          { "href": "#local-only", "label": "Local only" }
+        ]
+      },
+      {
+        "heading": "Resources",
+        "items": [
+          { "href": "/docs/", "label": "Documentation" },
+          { "href": "/changelog/", "label": "Changelog" },
+          { "href": "/", "label": "← Back to site" }
+        ]
+      }
+    ]
+  },
+  "topbar": {
+    "crumbs": ["aethyr.gg", "security"]
+  },
+  "article": {
+    "heading": "Security & Privacy",
+    "lead": "What Aethyr can and cannot do to your project, and the architecture that keeps your work safe.",
+    "sections": [
+      {
+        "id": "no-telemetry",
+        "heading": "No telemetry",
+        "html": "<p>Aethyr collects <strong>zero telemetry</strong>. There are no analytics calls, no crash reporters, no usage metrics, and no license pings. The server makes no outbound network connections of any kind during normal operation.</p><p>Your workflow data, Blueprint contents, and project structure never leave your machine.</p>"
+      },
+      {
+        "id": "read-only",
+        "heading": "Read-only by default",
+        "html": "<p>Out of the box, Aethyr is a read-only tool. All 32 read tools work immediately. Write operations—adding variables, wiring nodes, saving assets—are gated behind an environment variable:</p><pre><code>AETHYR_ALLOW_WRITE=1</code></pre><p>Without this variable set, any write request returns an error before touching any file. Set it only in the sessions where you want edits to happen.</p>"
+      },
+      {
+        "id": "backup-ring",
+        "heading": "Automatic backup ring",
+        "html": "<p>Before any write operation touches an asset, Aethyr creates a timestamped backup copy in a <code>.aethyr-backups/</code> directory adjacent to the asset. The backup ring stores the last <strong>N copies</strong> per asset and rotates automatically.</p><p>If something goes wrong after a write, restore any asset by copying the backup back. The backup predates the write by design—it is always a clean copy of the pre-edit state.</p><div class='note tip'><p><strong>No writes happen without a backup.</strong> The backup step is not optional and cannot be skipped.</p></div>"
+      },
+      {
+        "id": "compile-gate",
+        "heading": "Compile gate",
+        "html": "<p>Every write operation that modifies a Blueprint graph runs a compile check before saving. If the result would produce a compile error, the save is aborted and an error is returned to your AI client. The asset on disk is never written in this case.</p><p>This means Aethyr <strong>cannot save a broken Blueprint</strong>. A tool call either produces a clean, compiling, saved asset—or it produces nothing and tells you why.</p>"
+      },
+      {
+        "id": "local-only",
+        "heading": "Local only",
+        "html": "<p>Aethyr is a local server that runs on your development machine. It communicates with your AI client over a local stdio pipe—the same machine, no network hop. It communicates with the Unreal Editor over a local socket on loopback (127.0.0.1).</p><p>There is no Aethyr cloud service, no API key required, and no account to create. The server binary is a self-contained executable with no external runtime dependencies beyond the Unreal Editor itself.</p><div class='note arc'><p>Studio developers: Aethyr is safe to use on NDA projects. Your project data is physically incapable of leaving your machine because the server has no network egress path.</p></div>"
+      }
+    ],
+    "pager": {
+      "prev": { "href": "/changelog/", "label": "← Changelog" },
+      "next": { "href": "/docs/", "label": "Documentation →" }
+    }
+  }
+}
