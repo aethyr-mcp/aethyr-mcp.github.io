@@ -136,8 +136,7 @@
     "heading": "Works with every MCP client.",
     "items": [
       {
-        "name": "Claude",
-        "note": "by Anthropic"
+        "name": "Claude"
       },
       {
         "name": "Cursor"
