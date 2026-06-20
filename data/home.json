@@ -103,7 +103,7 @@
       {
         "glyph": "✶",
         "title": "Author by asking",
-        "body": ""Add a dash ability with a 2-second cooldown." It spawns the variables, wires the nodes, and compiles—the way you'd do it by hand, but spoken.",
+        "body": "&ldquo;Add a dash ability with a 2-second cooldown.&rdquo; It spawns the variables, wires the nodes, and compiles—the way you'd do it by hand, but spoken.",
         "tag": "47 write tools"
       },
       {
@@ -173,7 +173,7 @@
       {
         "no": "02",
         "title": "Speak the intent",
-        "body": "Ask in plain language. "What does BP_Enemy do?" "Refactor this into a function." "Give the player a double-jump.""
+        "body": "Ask in plain language. &ldquo;What does BP_Enemy do?&rdquo; &ldquo;Refactor this into a function.&rdquo; &ldquo;Give the player a double-jump.&rdquo;"
       },
       {
         "no": "03",
