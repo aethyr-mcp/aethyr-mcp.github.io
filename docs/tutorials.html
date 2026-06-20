@@ -207,9 +207,9 @@
   <code>apply_ops</code> batch wrapped in a single undo transaction. Either every node and wire
   lands together or none does, so the graph never sits half-built between calls.</p></div>
 <div class="note tip"><p><strong>Look before you leap:</strong> <code>preview_ops</code> renders
-  the exact changes without writing a byte, and <code>compile_function</code> assembles the graph
-  from plain pseudocode so you confirm it builds before it ever reaches the asset. Reads like
-  <code>get_compile_status</code> are free to call as often as you like within a turn.</p></div>
+  the exact changes without writing a byte, so you confirm the shape of the handler before it ever
+  reaches the asset. Reads like <code>get_compile_status</code> are free to call as often as you
+  like within a turn.</p></div>
 <div class="note warn"><p><strong>Safety net:</strong> every write passes a compile gate and copies
   the existing <code>.uasset</code> to a timestamped backup before the first save of the session.
   If a change goes wrong, restore the backup over the file while no editor holds it. Reads never
