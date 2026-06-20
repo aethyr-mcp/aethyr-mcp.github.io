@@ -56,7 +56,9 @@ async function loadDocsPage(jsonPath) {
         const crumbs = (tb.crumbs || []).map((c, i) =>
           c.current ? '<b>' + esc(c.label) + '</b>' : esc(c.label)
         ).join(' / ');
-        topbarHTML = '<div class="topbar"><span class="crumbs">' + crumbs + '</span>'
+        topbarHTML = '<div class="topbar">'
+          + '<button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar"><span></span><span></span><span></span></button>'
+          + '<span class="crumbs">' + crumbs + '</span>'
           + (tb.badge ? '<span class="badge">' + esc(tb.badge) + '</span>' : '')
           + '</div>';
       }
@@ -86,8 +88,9 @@ async function loadDocsPage(jsonPath) {
       main.innerHTML = topbarHTML + '<article class="doc">' + articleHTML + '</article>';
     }
 
-    // scroll-spy
+    // scroll-spy + mobile nav drawer
     initScrollSpy();
+    initMobileNav();
 
   } catch (err) {
     const main = document.getElementById('main-content');
@@ -101,6 +104,25 @@ function resolveAssetPath(path) {
   const depth = location.pathname.split('/').filter(Boolean).length;
   const prefix = depth > 1 ? '../'.repeat(depth - 1) : '';
   return '/' + path;
+}
+
+function initMobileNav() {
+  // The hamburger (in the rendered topbar) toggles the sidebar as an off-canvas
+  // drawer on mobile. Desktop is unaffected (button is display:none above 880px).
+  const side = document.querySelector('.side');
+  const btn = document.querySelector('.navtoggle');
+  if (!side || !btn || btn.dataset.wired) return;
+  btn.dataset.wired = '1';
+  let ov = document.querySelector('.nav-ov');
+  if (!ov) { ov = document.createElement('div'); ov.className = 'nav-ov'; document.body.appendChild(ov); }
+  const set = (open) => {
+    document.body.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  btn.addEventListener('click', () => set(!document.body.classList.contains('nav-open')));
+  ov.addEventListener('click', () => set(false));
+  side.addEventListener('click', (e) => { if (e.target.closest('a')) set(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') set(false); });
 }
 
 function initScrollSpy() {
