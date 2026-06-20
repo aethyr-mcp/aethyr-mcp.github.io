@@ -17,8 +17,7 @@
     "titleClasses": ["glitch", "glitch arcane"],
     "sub": "Point your AI assistant at your project and just <em>ask</em>. It reads and rewrites your Unreal Engine 5 Blueprints in plain language, with no editor scripting, no C++, and <strong>nothing that can corrupt your assets.</strong>",
     "cta": [
-      { "href": "#summon", "label": "⚡ Get it on Fab", "class": "btn btn-primary" },
-      { "href": "downloads/aethyr-mcp-ue5-plugin.zip", "label": "↓ Download", "class": "btn btn-ghost", "download": true },
+      { "href": "downloads/aethyr-mcp-ue5-plugin.zip", "label": "↓ Download", "class": "btn btn-primary", "download": true },
       { "href": "/docs/", "label": "▸ Read the docs", "class": "btn btn-ghost" }
     ],
     "stats": [
@@ -47,7 +46,7 @@
     "kicker": "// THE RITUAL",
     "heading": "Three steps to a<br>talking <span class=\"grad\">grimoire</span>.",
     "steps": [
-      { "no": "01", "title": "Bind your AI", "body": "Drop the server into your MCP client’s config. One block, paste-and-go for Claude, Copilot, or Cursor." },
+      { "no": "01", "title": "Bind your AI", "body": "Drop the server into your MCP client’s config. One block, paste-and-go for Claude." },
       { "no": "02", "title": "Speak the intent", "body": "Ask in plain language. “What does BP_Enemy do?” “Refactor this into a function.” “Give the player a double-jump.”" },
       { "no": "03", "title": "Watch it weave", "body": "It reads, edits, compiles, and saves: atomically, backed up, on the real asset. You review the diff." }
     ]
@@ -55,10 +54,9 @@
   "summon": {
     "kicker": "// ACQUIRE",
     "heading": "One package.<br>The proven core.",
-    "body": "A single, focused build with only the tools we’d stake our reputation on, every one verified against real projects. Landing on Epic’s Fab marketplace.",
+    "body": "A single, focused build with only the tools we’d stake our reputation on, every one verified against real projects.",
     "cta": [
       { "href": "downloads/aethyr-mcp-ue5-plugin.zip", "label": "↓ Download plugin", "class": "btn btn-primary big", "download": true },
-      { "href": "#", "label": "⚡ Coming to Fab", "class": "btn btn-ghost big", "soon": true },
       { "href": "/docs/", "label": "▸ Start with the docs", "class": "btn btn-ghost big" }
     ],
     "fineprint": "Built for Unreal Engine 5.8 · no telemetry"

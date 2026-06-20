@@ -1,9 +1,86 @@
-// Docs page renderer — fetches a docs-*.json and populates #sidebar and #main-content
+// Aethyr docs page renderer — fetches a docs-*.json and populates #sidebar and #main-content
 
 function esc(s) {
-  return String(s ?? '')
-    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  return String(s ?? '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
+
+// ---- section-type renderers ------------------------------------------------
+
+function renderSpells(sec) {
+  // Cookbook section: intro + spell cards (incant / description / tools)
+  let h = '';
+  if (sec.spells && sec.spells.length) {
+    h += '<div class="spell-grid">';
+    for (const sp of sec.spells) {
+      const toolTags = (sp.tools || []).map(t => '<code>' + esc(t) + '</code>').join(' ');
+      h += '<div class="spell">'
+        + '<p class="incant">' + esc(sp.incant) + '</p>'
+        + '<p class="spell-desc">' + esc(sp.description) + '</p>'
+        + (toolTags ? '<p class="spell-tools">' + toolTags + '</p>' : '')
+        + '</div>';
+    }
+    h += '</div>';
+  }
+  return h;
+}
+
+function renderCategories(categories) {
+  // Reference: grouped tool tables
+  let h = '';
+  for (const cat of categories) {
+    h += '<div class="tool-category">'
+      + '<h3>' + esc(cat.name) + ' <span class="tool-count">' + (cat.count || cat.tools.length) + '</span></h3>'
+      + '<table class="tool-table"><tbody>';
+    for (const tool of (cat.tools || [])) {
+      h += '<tr><td><code>' + esc(tool.name) + '</code></td><td>' + tool.description + '</td></tr>';
+    }
+    h += '</tbody></table></div>';
+  }
+  return h;
+}
+
+function renderSkills(skills) {
+  let h = '<div class="skill-list">';
+  for (const sk of skills) {
+    h += '<div class="skill-row">'
+      + '<div class="skill-name"><code>' + esc(sk.name) + '</code>'
+      + (sk.badge ? ' <span class="badge">' + esc(sk.badge) + '</span>' : '')
+      + '</div>'
+      + '<p>' + (sk.description || '') + '</p>'
+      + '</div>';
+  }
+  return h + '</div>';
+}
+
+function renderFlags(flags) {
+  let h = '<table class="flag-table"><tbody>';
+  for (const f of flags) {
+    h += '<tr><td><code>' + esc(f.name) + '</code></td><td>' + f.description + '</td></tr>';
+  }
+  return h + '</tbody></table>';
+}
+
+function renderBackends(backends) {
+  let h = '<table class="backend-table"><tbody>';
+  for (const b of backends) {
+    h += '<tr><td><code>' + esc(b.name) + '</code></td><td>' + esc(b.description) + '</td></tr>';
+  }
+  return h + '</tbody></table>';
+}
+
+function renderSection(sec) {
+  let h = '';
+  if (sec.html)        h += sec.html;
+  if (sec.intro)       h += '<p class="section-intro">' + esc(sec.intro) + '</p>';
+  if (sec.spells)      h += renderSpells(sec);
+  if (sec.categories)  h += renderCategories(sec.categories);
+  if (sec.skills)      h += renderSkills(sec.skills);
+  if (sec.flags)       h += renderFlags(sec.flags);
+  if (sec.backends)    h += renderBackends(sec.backends);
+  return h;
+}
+
+// ---- main loader -----------------------------------------------------------
 
 async function loadDocsPage(jsonPath) {
   try {
@@ -28,11 +105,9 @@ async function loadDocsPage(jsonPath) {
     const sidebar = document.getElementById('sidebar');
     if (sidebar && data.sidebar) {
       const s = data.sidebar;
-      const brandHref = s.brand?.href ?? '/';
-      const brandLabel = s.brand?.label ?? 'Aethyr';
-      let sideHTML = '<a class="brand" href="' + esc(brandHref) + '">'
-        + '<img class="sig" src="' + resolveAssetPath('img/brand/aethyr-crystal.svg') + '" alt="" aria-hidden="true" width="18" height="18"> '
-        + esc(brandLabel) + '</a>';
+      let sideHTML = '<a class="brand" href="' + esc(s.brand?.href ?? '/') + '">'
+        + '<img class="sig" src="/img/brand/aethyr-crystal.svg" alt="" aria-hidden="true" width="18" height="18"> '
+        + esc(s.brand?.label ?? 'Aethyr') + '</a>';
       if (s.backHref) sideHTML += '<a class="home" href="' + esc(s.backHref) + '">&larr; back to site</a>';
       sideHTML += '<nav>';
       for (const section of (s.sections || [])) {
@@ -51,12 +126,16 @@ async function loadDocsPage(jsonPath) {
       const a = data.article;
       const tb = data.topbar;
 
+      // topbar — crumbs can be plain strings or {label, current} objects
       let topbarHTML = '';
       if (tb) {
-        const crumbs = (tb.crumbs || []).map((c, i) =>
-          c.current ? '<b>' + esc(c.label) + '</b>' : esc(c.label)
+        const crumbs = (tb.crumbs || []).map(c =>
+          typeof c === 'string' ? esc(c) : (c.current ? '<b>' + esc(c.label) + '</b>' : esc(c.label))
         ).join(' / ');
-        topbarHTML = '<div class="topbar"><span class="crumbs">' + crumbs + '</span>'
+        topbarHTML = '<div class="topbar">'
+          + '<button class="navtoggle" aria-label="Toggle navigation" aria-expanded="false" aria-controls="sidebar">'
+          + '<span></span><span></span><span></span></button>'
+          + '<span class="crumbs">' + crumbs + '</span>'
           + (tb.badge ? '<span class="badge">' + esc(tb.badge) + '</span>' : '')
           + '</div>';
       }
@@ -67,40 +146,80 @@ async function loadDocsPage(jsonPath) {
         articleHTML += '<p><span class="aud new">New here</span> <span class="aud vet">UE veteran</span> ' + a.audNote + '</p>';
       }
 
-      for (const sec of (a.sections || [])) {
-        articleHTML += '<h2 id="' + esc(sec.id) + '">' + (sec.heading || '') + '</h2>';
-        articleHTML += sec.html || '';
+      // cookbook: top note block
+      if (a.note) {
+        articleHTML += '<div class="note ' + esc(a.note.type || 'tip') + '">' + (a.note.html || '') + '</div>';
+      }
+      // cookbook: spellnav pill bar
+      if (a.spellnav) {
+        articleHTML += '<div class="spellnav">';
+        for (const link of a.spellnav) {
+          articleHTML += '<a href="' + esc(link.href) + '">' + esc(link.label) + '</a>';
+        }
+        articleHTML += '</div>';
       }
 
+      // tutorials: stories grid
+      if (a.stories) {
+        articleHTML += '<div class="stories">';
+        for (const story of a.stories) {
+          articleHTML += '<a class="story" href="' + esc(story.href) + '">'
+            + '<span class="g">' + story.glyph + '</span>'
+            + '<h3>' + esc(story.title) + '</h3>'
+            + '<p>' + esc(story.desc) + '</p>'
+            + '<span class="via">' + esc(story.via) + '</span>'
+            + '</a>';
+        }
+        articleHTML += '</div>';
+      }
+
+      // all pages: sections
+      for (const sec of (a.sections || [])) {
+        const icon = sec.icon ? ' <span class="sec-icon">' + sec.icon + '</span>' : '';
+        articleHTML += '<h2 id="' + esc(sec.id) + '">' + (sec.heading || '') + icon + '</h2>';
+        articleHTML += renderSection(sec);
+      }
+
+      // pager
       if (a.pager) {
         articleHTML += '<div class="pager">';
         articleHTML += a.pager.prev
           ? '<a href="' + esc(a.pager.prev.href) + '">' + esc(a.pager.prev.label) + '</a>'
           : '<span></span>';
-        articleHTML += a.pager.next
-          ? '<a href="' + esc(a.pager.next.href) + '">' + esc(a.pager.next.label) + '</a>'
-          : '';
+        if (a.pager.next) articleHTML += '<a href="' + esc(a.pager.next.href) + '">' + esc(a.pager.next.label) + '</a>';
         articleHTML += '</div>';
       }
 
       main.innerHTML = topbarHTML + '<article class="doc">' + articleHTML + '</article>';
     }
 
-    // scroll-spy
     initScrollSpy();
+    initMobileNav();
 
   } catch (err) {
     const main = document.getElementById('main-content');
-    if (main) main.innerHTML = '<div class="error-page"><p>Failed to load page content.</p></div>';
+    if (main) main.innerHTML = '<div class="error-page"><p>Failed to load page content. Please refresh.</p></div>';
     console.error('loadDocsPage error:', err);
   }
 }
 
-function resolveAssetPath(path) {
-  // Resolve path relative to site root regardless of current URL depth
-  const depth = location.pathname.split('/').filter(Boolean).length;
-  const prefix = depth > 1 ? '../'.repeat(depth - 1) : '';
-  return '/' + path;
+// ---- interactions ----------------------------------------------------------
+
+function initMobileNav() {
+  const side = document.querySelector('.side');
+  const btn = document.querySelector('.navtoggle');
+  if (!side || !btn || btn.dataset.wired) return;
+  btn.dataset.wired = '1';
+  let ov = document.querySelector('.nav-ov');
+  if (!ov) { ov = document.createElement('div'); ov.className = 'nav-ov'; document.body.appendChild(ov); }
+  const set = open => {
+    document.body.classList.toggle('nav-open', open);
+    btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  };
+  btn.addEventListener('click', () => set(!document.body.classList.contains('nav-open')));
+  ov.addEventListener('click', () => set(false));
+  side.addEventListener('click', e => { if (e.target.closest('a')) set(false); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') set(false); });
 }
 
 function initScrollSpy() {
