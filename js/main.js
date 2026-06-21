@@ -92,6 +92,30 @@
       ).join('');
     }
 
+    const compareInner = document.getElementById('compare-inner');
+    if (compareInner && data.compare) {
+      const cmp = data.compare;
+      let cmpHTML = '<div class="section-head"><span class="kicker">' + cmp.kicker + '</span>'
+        + '<h2>' + cmp.heading + '</h2></div>'
+        + (cmp.note ? '<p class="compare-note">' + cmp.note + '</p>' : '')
+        + '<div class="compare-scroll"><table class="compare-table"><thead><tr><th></th>'
+        + cmp.cols.map((c, i) => '<th class="' + (i === 0 ? 'col-aethyr' : '') + '">' + c + '</th>').join('')
+        + '</tr></thead><tbody>';
+      for (const row of cmp.rows) {
+        cmpHTML += '<tr><td class="feat-name">' + row.feature + '</td>'
+          + row.values.map((v, i) => {
+              const cls = i === 0 ? ' class="col-aethyr"' : '';
+              const val = v === '✓' ? '<span class="cmp-yes">✓</span>'
+                : v === '—' ? '<span class="cmp-no">—</span>'
+                : '<span class="cmp-val">' + v + '</span>';
+              return '<td' + cls + '>' + val + '</td>';
+            }).join('')
+          + '</tr>';
+      }
+      cmpHTML += '</tbody></table></div>';
+      compareInner.innerHTML = cmpHTML;
+    }
+
     const flowHead = document.getElementById('flow-head');
     if (flowHead && data.flow) {
       flowHead.innerHTML =
@@ -136,7 +160,9 @@
         '<h2>' + data.summon.heading + '</h2>' +
         '<p>' + data.summon.body + '</p>' +
         '<div class="summon-cta">' + ctaHTML + '</div>' +
-        '<p class="fineprint">' + data.summon.fineprint + '</p>';
+        '<p class="fineprint">' + data.summon.fineprint + '</p>'
+        + (data.summon.studio ? '<p class="studio-line">' + data.summon.studio.label
+          + ' <a href="' + data.summon.studio.href + '">' + data.summon.studio.linkLabel + '</a>.</p>' : '');
     }
 
     const footer = document.getElementById('site-footer');

@@ -161,6 +161,20 @@
     "caption": "Add to your MCP client config. Replace the path with wherever you unpacked the plugin.",
     "code": "{\n  \"mcpServers\": {\n    \"aethyr-ue5\": {\n      \"command\": \"C:\\\\path\\\\to\\\\aethyr-mcp.exe\",\n      \"env\": {\n        \"UE_PROJECT\": \"C:\\\\Game\\\\MyGame.uproject\"\n      }\n    }\n  }\n}"
   },
+  "compare": {
+    "kicker": "// VS THE FIELD",
+    "heading": "Why not just use<br>the <span class=\"grad\">free one</span>?",
+    "note": "Epic shipped an experimental in-editor MCP server in UE 5.8. Here's how Aethyr is different.",
+    "cols": ["Aethyr", "Epic Native MCP (5.8)", "Generic AI Copilot"],
+    "rows": [
+      { "feature": "Blueprint write tools", "values": ["47", "~5", "0"] },
+      { "feature": "Corruption safety", "values": ["✓", "—", "—"] },
+      { "feature": "Batch operations", "values": ["✓", "—", "—"] },
+      { "feature": "Blueprint read tools", "values": ["32", "limited", "0"] },
+      { "feature": "Local-only / NDA safe", "values": ["✓", "✓", "—"] },
+      { "feature": "No telemetry", "values": ["✓", "✓", "—"] }
+    ]
+  },
   "flow": {
     "kicker": "// THE RITUAL",
     "heading": "Three steps to a<br>talking <span class=\"grad\">grimoire</span>.",
@@ -228,7 +242,12 @@
         "class": "btn btn-ghost big"
       }
     ],
-    "fineprint": "Free to download · no telemetry · local only"
+    "fineprint": "Free to download · no telemetry · local only",
+    "studio": {
+      "label": "Running NDA work or building for a studio?",
+      "linkLabel": "Reach out",
+      "href": "mailto:hello@aethyr.gg"
+    }
   },
   "footer": {
     "tagline": "Made for builders who'd rather describe a mechanic than wire it by hand.",
